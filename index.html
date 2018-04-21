@@ -186,6 +186,7 @@
             document.querySelector('#round').innerHTML = round;
 
         }
+        var container = document.querySelector("header table tr");
 
         function updateRndScore(){
           if(stopWatch == 0){
@@ -196,7 +197,7 @@
             td.setAttribute("round-score-header",round);
             td.innerHTML = '<tr id="header"><td>Round '+round+ '<br>Score:<br></td></tr>';
 
-            var container = document.querySelector("header table tr");
+            // var container = document.querySelector("header table tr");
 
             container.appendChild(td);
             getRndScore();
@@ -204,7 +205,8 @@
           console.log('else statement in updateRndScore');
           }
         }
-
+        // var td = document.createElement("td");
+        var container2 = document.querySelector("header table tr");
         function getRndScore(){
           if(stopWatch == 0) {
             var td = document.createElement("td");
@@ -224,7 +226,7 @@
         }
         }
 
-
+  var container3 = document.querySelector("header");
         function nextRound(){
 
           var div = document.createElement("div");
@@ -237,13 +239,16 @@
           div.innerHTML = 'Aww man.  More aggression needed to advance to Round 2.  GAME OVER. <br>Press PLAY to try again.<br><input type=button onclick="playAgain()" value="Play Again">';
 
         }
-        var container3 = document.querySelector("header");
+
         container3.appendChild(div);
       }
 
         function playAgain(){
+          // console.log('play again button talking');
           gameboard.style.display = 'block';
-          console.log('play again button talking');
+          container.lastElementChild.style.display = 'none';
+          container2.nextElementSibling.lastElementChild.style.display = 'none';
+
 
           score = 0;
           timer = 10;
