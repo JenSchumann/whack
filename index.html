@@ -77,11 +77,14 @@
   <body>
     <header>
     <h1>Office Break</h1>
-    <!-- need to hide this.. maybe put it in a div w/id name once user presses "Start Game" -->
-    <h3>Eyes tired from looking at the screen? <br> Frustrated about a certain problem you're troubleshooting in your computer work? <br> Take a break & play the age-old game of Whack-A-Mole... <br>See how many computers you can hit in 60 seconds!<br>Increase your score each round & you win after Round 3!<br>Minimum score of 12 is needed to proceed past Round 1.</h3>
+    <div id="info">
+      <h3>Eyes tired from looking at the screen? <br> Frustrated about a certain problem you're troubleshooting in your computer work? <br> Take a break & play the age-old game of Whack-A-Mole... <br>See how many computers you can hit in 60 seconds!<br>Increase your score each round & you win after Round 3!<br>Minimum score of 12 is needed to proceed past Round 1.</h3>
+
+      <input type="button" onclick="start()" value="Start Game"><br><br>
+    </div>
     <!-- <br> -->
 
-    <input type="button" onclick="start()" value="Start Game"><br><br>
+
     <table>
       <tr id="header">
             <td class="td1">Score</td>
@@ -180,6 +183,8 @@
         }
 
         function start() {
+            var info = document.getElementById('info');
+            info.style.display = 'none';
             popup();
             startClock();
             round++;
@@ -227,9 +232,11 @@
         }
 
   var container3 = document.querySelector("header");
+  var div = document.createElement("div");
+
         function nextRound(){
 
-          var div = document.createElement("div");
+          // var div = document.createElement("div");
           //need to grab this class item & hide it during playAgain
           div.classList.add('rndMessage');
           if(score >= 5){
@@ -248,6 +255,7 @@
           gameboard.style.display = 'block';
           container.lastElementChild.style.display = 'none';
           container2.nextElementSibling.lastElementChild.style.display = 'none';
+          div.innerHTML = '';
 
 
           score = 0;
