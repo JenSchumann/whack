@@ -196,7 +196,6 @@
         function updateRndScore(){
           if(stopWatch == 0){
             var td = document.createElement("td");
-            // td.style.backgroundColor = "yellow";
             td.classList.add('roundHeader');
             td.style.borderLeft = "1px solid #ddd";
             td.setAttribute("round-score-header",round);
@@ -235,20 +234,31 @@
   var div = document.createElement("div");
 
         function nextRound(){
-
-          // var div = document.createElement("div");
-          //need to grab this class item & hide it during playAgain
           div.classList.add('rndMessage');
-          if(score >= 5){
-          div.innerHTML = "Congrats! You qualify to play the next Round!<br>Press PLAY to begin Round 2 or Cancel to restart.<br><button class='next'>Play</button><button class='Cancel'>Cancel</button>";
+          if(score >= 2){
+          var nextRnd = round + 1;
+          div.innerHTML = "Congrats! You qualify to play the next Round!<br>Press PLAY to begin Round "+ nextRnd +" or Cancel to restart.<br><button class='next' onclick='playNextRnd()'>Play</button><button class='cancel' onclick='cancel()'>Cancel</button>";
 
         } else {
-          div.innerHTML = 'Aww man.  More aggression needed to advance to Round 2.  GAME OVER. <br>Press PLAY to try again.<br><input type=button onclick="playAgain()" value="Play Again">';
+          div.innerHTML = 'Aww man.  More aggression needed to advance to Round '+round+ ' .  GAME OVER. <br>Press PLAY to try again.<br><input type=button onclick="playAgain()" value="Play Again">';
 
+          }
+          container3.appendChild(div);
         }
 
-        container3.appendChild(div);
-      }
+        function cancel(){
+          var rRndScore = document.querySelector("td.roundHeader");
+          console.log(rRndScore);
+          // rRndScore.style.display = 'none';
+
+          // gameboard.style.display = 'block';
+          // info.style.display = 'block';
+          // div.innerHTML = '';
+          // build();
+
+
+
+        }
 
         function playAgain(){
           // console.log('play again button talking');
@@ -267,11 +277,20 @@
           document.querySelector('#timer').innerHTML = stopWatch;
           document.getElementById('score').innerHTML = score;
           document.getElementById('round').innerHTML = round;
-
-
         };
 
-
+        function playNextRnd(){
+          gameboard.style.display = 'block';
+          div.innerHTML = '';
+          score = 0;
+          timer = 10;
+          stopWatch = timer -1;
+          round++;
+          startClock();
+          document.querySelector('#timer').innerHTML = stopWatch;
+          document.getElementById('score').innerHTML = score;
+          document.getElementById('round').innerHTML = round;
+        }
 
 
 
