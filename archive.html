@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+
+        header{
+          text-align: center;
+        }
+
+        h1{
+          text-align:center;
+        }
+        table{
+          border: 1px solid #ddd;
+          text-align: center;
+          margin: 0 auto;
+          margin-bottom: 2em;
+        }
+
+        td{
+          padding: .5em 1.75em;
+        }
+        .td1,.td2 {
+          border-right: 1px solid #ddd;
+          margin: 0;
+        }
+
+        #score,#timer,#round{
+          border-top: 1px solid #ddd;
+        }
+        .gameboard {
+               width: 600px;
+               height: 800px;
+               margin: 0 auto;
+               border: 1px solid #ddd;
+           }
+
+           .office {
+               float: left;
+               width: 120px;
+               height: 170px;
+               overflow: hidden;
+               position: relative;
+               border: 1px solid #ddd;
+               margin: 10px 30px;
+           }
+
+           .desk {
+               width: 100%;
+               height: 50px;
+               bottom: 0px;
+               position: absolute;
+               background-color: burlywood;
+               z-index: 2;
+           }
+
+           .computer {
+               background: url('Screen Shot 2018-04-06 at 4.22.28 PM.png') bottom center no-repeat;
+               background-size: 100% 100%;
+               position: absolute;
+               top: 100%;
+               width: 100%;
+               height: 80%;
+               transition: all 0.5s;
+
+           }
+
+           .popup {
+               top: 0;
+           }
+    </style>
+  </head>
+  <body>
+
+  </body>
+  <script type="text/javascript">
+  window.onload = build;
+      var computer;
+      var offices = 9;
+      var timer;
+      var sCom;
+      var score = 0;
+      var cOff = true;
+      var stopWatch = 10;
+      var rndTimer;
+      var round = "";
+      var rndScore;
+      var gameboard = document.querySelector('div.gameboard');
+
+
+      function build() {
+          var html = "<h1>Whack a PC!</h1>";
+          for (var x = 0; x < offices; x++) {
+              html += '<div class="office"><div class="desk"></div><div class="computer"></div></div>';
+          }
+          document.querySelector('.gameboard').innerHTML = html;
+          computer = document.querySelectorAll('.computer');
+          for (var x = 0; x < computer.length; x++) {
+              computer[x].addEventListener('click', hitcomputer, false);
+          }
+      }
+
+      function popup() {
+          cOff = true;
+          sCom = computer[Math.floor(Math.random() * computer.length)];
+          sCom.classList.add('popup');
+          //need to figure out how to make it easier.. increased time to 4000 this may need to be tweaked further
+          //reset time from 10 to a 60 second round after testing:
+          var rTime = (Math.floor(Math.random() * 10) * 100) + 4000;
+          timer = setTimeout(hidecomputer, rTime);
+      }
+
+      function hidecomputer() {
+          sCom.classList.remove('popup');
+          popup();
+      }
+
+      function startClock(){
+          rndTimer = window.setTimeout( "countDown()", 1000);
+          window.status = rndTimer;
+      }
+
+
+      function countDown(){
+        stopWatch = stopWatch - 1;
+        // window.status = stopWatch;
+        document.querySelector('#timer').innerHTML = stopWatch;
+        if (stopWatch == 0) {
+          window.clearTimeout( rndTimer );
+          rndTimer = null;
+          //function to check round, & stop or continue play
+          // stopPlay();
+          //function to update score at the end of each Round:
+          updateRndScore();
+
+        } else {
+          rndTimer = window.setTimeout( "countDown()",1000);
+        }
+      }
+
+      function hitcomputer() {
+          event.target.classList.remove('popup');
+          if (cOff) {
+              cOff = false;
+              score++;
+              document.querySelector('#score').innerHTML = score;
+          }
+          popup();
+      }
+
+      function start() {
+          var info = document.getElementById('info');
+          info.style.display = 'none';
+          popup();
+          startClock();
+          round++;
+          document.querySelector('#round').innerHTML = round;
+
+      }
+      var container = document.querySelector("header table tr");
+
+      function updateRndScore(){
+        if(stopWatch == 0){
+          var td = document.createElement("td");
+          td.classList.add('roundHeader');
+          td.style.borderLeft = "1px solid #ddd";
+          td.setAttribute("round-score-header",round);
+          td.innerHTML = '<tr id="header"><td>Round '+round+ '<br>Score:<br></td></tr>';
+
+          // var container = document.querySelector("header table tr");
+
+          container.appendChild(td);
+          getRndScore();
+        } else {
+        console.log('else statement in updateRndScore');
+        }
+      }
+      // var td = document.createElement("td");
+      var container2 = document.querySelector("header table tr");
+      function getRndScore(){
+        if(stopWatch == 0) {
+          var td = document.createElement("td");
+          td.style.borderTop = "1px solid #ddd";
+          td.style.borderLeft = "1px solid #ddd";
+          td.setAttribute("round-score",score);
+          td.innerHTML = '<tr id="data"><td>'+score+'</td></tr>';
+
+          var container2 = document.querySelector("header table tr");
+
+          container2.nextElementSibling.appendChild(td);
+
+          gameboard.style.display = "none";
+          nextRound();
+        } else {
+        console.log('else statement in getRndScore');
+      }
+      }
+
+var container3 = document.querySelector("header");
+var div = document.createElement("div");
+
+      function nextRound(){
+        div.classList.add('rndMessage');
+        if(score >= 2){
+        var nextRnd = round + 1;
+        div.innerHTML = "Congrats! You qualify to play the next Round!<br>Press PLAY to begin Round "+ nextRnd +" or Cancel to restart.<br><button class='next' onclick='playNextRnd()'>Play</button><button class='cancel' onclick='cancel()'>Cancel</button>";
+
+      } else {
+        div.innerHTML = 'Aww man.  More aggression needed to advance to Round '+round+ ' .  GAME OVER. <br>Press PLAY to try again.<br><input type=button onclick="playAgain()" value="Play Again">';
+
+        }
+        container3.appendChild(div);
+      }
+
+      function cancel(){
+        var rRndScore = document.querySelector("td.roundHeader");
+        console.log(rRndScore);
+        // rRndScore.style.display = 'none';
+
+        // gameboard.style.display = 'block';
+        // info.style.display = 'block';
+        // div.innerHTML = '';
+        // build();
+
+
+
+      }
+
+      function playAgain(){
+        // console.log('play again button talking');
+        gameboard.style.display = 'block';
+        container.lastElementChild.style.display = 'none';
+        container2.nextElementSibling.lastElementChild.style.display = 'none';
+        div.innerHTML = '';
+
+
+        score = 0;
+        timer = 10;
+        round = 0;
+        stopWatch = timer -1;
+        round++;
+        startClock();
+        document.querySelector('#timer').innerHTML = stopWatch;
+        document.getElementById('score').innerHTML = score;
+        document.getElementById('round').innerHTML = round;
+      };
+
+      function playNextRnd(){
+        gameboard.style.display = 'block';
+        div.innerHTML = '';
+        score = 0;
+        timer = 10;
+        stopWatch = timer -1;
+        round++;
+        startClock();
+        document.querySelector('#timer').innerHTML = stopWatch;
+        document.getElementById('score').innerHTML = score;
+        document.getElementById('round').innerHTML = round;
+      }
+
+
+
+
+
+
+
+      function stopPlay(){
+          if(round < 4){
+
+            round++;
+          } else if (round >= 3){
+            console.log("game is over");
+          }
+      }
+  </script>
+</html>
